@@ -1,1 +1,1 @@
-# emily-chapman-p2
+# ITDEV-161 Project 2
