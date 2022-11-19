@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDatabase from './config/database';
 import {check, validationResult} from 'express-validator';
+import cors from "cors";
 
 //Initialize Express Server
 const recipeApp = express();
@@ -10,6 +11,11 @@ connectDatabase();
 
 //Configure Middleware
 recipeApp.use(express.json({ extended: false }));
+recipeApp.use(
+    cors({
+        origin: 'http://localhost:3000'
+    })
+);
 
 //Create root API endpoint
 recipeApp.get('/', (req, res) => 
