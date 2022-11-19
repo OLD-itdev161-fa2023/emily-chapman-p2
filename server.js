@@ -3,6 +3,8 @@ import connectDatabase from './config/database';
 import {check, validationResult} from 'express-validator';
 import cors from "cors";
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import config from 'config';
 import Baker from './models/Baker';
 
 //Initialize Express Server
@@ -62,7 +64,23 @@ recipeApp.post(
 
                 //Save to the database and return
                 await baker.save();
-                res.send('Baker successfully registered!');
+
+                //Generate and return a JWT token
+                const payload = {
+                    baker: {
+                        id: baker.id
+                    }
+                };
+            
+                jwt.sign(
+                    payload,
+                    config.get('jwtSecret'),
+                    { expiresIn: '10hr' },
+                    (err, token) => {
+                        if (err) throw err;
+                        res.json({ token: token });
+                    }
+                );
             } catch (error) {
                 res.status(500).send('Server error');
             }
