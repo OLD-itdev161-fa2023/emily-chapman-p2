@@ -2,6 +2,8 @@ import express from 'express';
 import connectDatabase from './config/database';
 import {check, validationResult} from 'express-validator';
 import cors from "cors";
+import bcrypt from 'bcryptjs';
+import Baker from './models/Baker';
 
 //Initialize Express Server
 const recipeApp = express();
@@ -31,12 +33,39 @@ recipeApp.post(
         check('password', 'Please enter a password with six or more characters.').isLength({min: 6}),
         check('favoriteDessert', 'Please enter your favorite dessert.').not().isEmpty()
     ],
-    (req, res) => {
+    async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({errors: errors.array()});
         } else {
-            res.send(req.body);
+            const {name, email, password, favoriteDessert} = req.body;
+            try {
+                //Check if baker exists
+                let baker = await Baker.findOne({ email: email });
+                if (baker) {
+                    return res
+                        .status(400)
+                        .json({ errors: [{msg: 'Baker already exists'}] });
+                }
+
+                //Create a new baker
+                baker = new Baker({
+                    name: name,
+                    email: email,
+                    password: password,
+                    favoriteDessert: favoriteDessert
+                });
+
+                //Encrypt the password
+                const salt = await bcrypt.genSalt(10);
+                baker.password = await bcrypt.hash(password, salt);
+
+                //Save to the database and return
+                await baker.save();
+                res.send('Baker successfully registered!');
+            } catch (error) {
+                res.status(500).send('Server error');
+            }
         }
     }
 );
