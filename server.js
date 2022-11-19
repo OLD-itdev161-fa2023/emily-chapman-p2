@@ -1,7 +1,11 @@
 import express from 'express';
+import connectDatabase from './config/database';
 
 //Initialize express application
 const recipeApp = express();
+
+//Connect to Database
+connectDatabase();
 
 //Create root API endpoint
 recipeApp.get('/', (req, res) => 
