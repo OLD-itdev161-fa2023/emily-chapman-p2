@@ -1,16 +1,22 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
-const Register = () => {
+const Register = ({authenticateBaker}) => {
+    let history = useHistory();
+    
     const [bakerData, setBakerData] = useState({
         name: '',
         email: '',
         password: '',
         passwordConfirm: '',
         favoriteDessert: ''
-    })
+    });
+
+    const [errorData, setErrorData] = useState({errors: null});
 
     const {name, email, password, passwordConfirm, favoriteDessert} = bakerData;
+    const {errors} = errorData;
 
     const onChange = e => {
         const {name, value} = e.target;
@@ -20,7 +26,7 @@ const Register = () => {
         })
     }
 
-    const register = async () => {
+    const registerBaker = async () => {
         if (password !== passwordConfirm) {
             console.log('Passwords do not match. Please update and try again.');
         } else {
@@ -40,11 +46,21 @@ const Register = () => {
 
                 const body = JSON.stringify(newBaker);
                 const res = await axios.post('http://localhost:5000/api/bakers', body, config);
-                console.log(res.data);
+                
+                //Store baker data and redirect
+                localStorage.setItem('token', res.data.token);
+                history.push('/');
             } catch (error) {
-                console.error(error.response.data);
-                return;
+                //Clear baker data and set errors
+                localStorage.removeItem('token');
+                
+                setErrorData({
+                    ...errors,
+                    errors: error.response.data.errors
+                })
             }
+
+            authenticateBaker();
         }
     }
 
@@ -97,7 +113,11 @@ const Register = () => {
                 />
             </div>
             <div>
-                <button onClick={() => register()}>Register</button>
+                <button onClick={() => registerBaker()}>Register</button>
+            </div>
+            <div>
+                {errors && errors.map(error => 
+                    <div key={error.msg}>{error.msg}</div>)}
             </div>
         </div>
     )
