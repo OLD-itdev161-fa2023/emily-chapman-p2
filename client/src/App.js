@@ -2,6 +2,8 @@ import React from 'react';
 import axios from "axios";
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import './App.css';
+import Register from './components/Register/Register';
+import Login from './components/Login/Login';
 
 class App extends React.Component {
   state = {
@@ -31,7 +33,7 @@ class App extends React.Component {
                 <Link to="/register">Register</Link>
               </li>
               <li>
-                <Link to="/signin">Sign In</Link>
+                <Link to="/login">Login</Link>
               </li>
             </ul>
           </header>
@@ -40,12 +42,8 @@ class App extends React.Component {
               <Route exact path="/">
                 {this.state.data}
               </Route>
-              <Route exact path="/register">
-                <h2>Register</h2>
-              </Route>
-              <Route exact path="/signin">
-                <h2>Sign In</h2>
-              </Route>
+              <Route exact path="/register" component={Register}/>
+              <Route exact path="/login" component={Login}/>
             </Switch>
           </main>
         </div>
