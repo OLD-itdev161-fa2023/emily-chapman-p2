@@ -66,22 +66,7 @@ recipeApp.post(
                 //Save to the database and return
                 await baker.save();
 
-                //Generate and return a JWT token
-                const payload = {
-                    baker: {
-                        id: baker.id
-                    }
-                };
-            
-                jwt.sign(
-                    payload,
-                    config.get('jwtSecret'),
-                    { expiresIn: '10hr' },
-                    (err, token) => {
-                        if (err) throw err;
-                        res.json({ token: token });
-                    }
-                );
+                returnToken(baker, res);
             } catch (error) {
                 res.status(500).send('Server error');
             }
@@ -98,6 +83,63 @@ recipeApp.get('/api/auth', auth, async (req, res) => {
         res.status(500).send('Unknown server error.');
     }
 });
+
+//Create login baker API endpoint
+recipeApp.post(
+    '/api/login', 
+    [
+        check('email', 'Please enter a valid email.').isEmail(),
+        check('password', 'Please enter your password.').exists()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({errors: errors.array()});
+        } else {
+            const {email, password} = req.body;
+            try {
+                //Check if baker exists
+                let baker = await Baker.findOne({email: email});
+                if (!baker) {
+                    return res
+                        .status(400)
+                        .json({errors: [{msg: 'Invalid email or password.'}] });
+                }
+
+                //Check password entered
+                const match = await bcrypt.compare(password, baker.password);
+                if (!match) {
+                    return res
+                        .status(400)
+                        .json({errors: [{msg: 'Invalid email or password.'}] });
+                }
+
+                returnToken(baker, res);
+            } catch (error) {
+                res.status(500).send('Server error.');
+            }
+        }
+    }
+);
+
+//Generate and return a JWT Token
+const returnToken = (baker, res) => {
+    const payload = {
+        baker: {
+            id: baker.id
+        }
+    };
+
+    jwt.sign(
+        payload,
+        config.get('jwtSecret'),
+        { expiresIn: '10hr' },
+        (err, token) => {
+            if (err) throw err;
+            res.json({ token: token });
+        }
+    );
+};
 
 //Set up connection listener
 const port = 5000;
