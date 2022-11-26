@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { application } from 'express';
 import connectDatabase from './config/database';
 import {check, validationResult} from 'express-validator';
 import cors from "cors";
@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import Baker from './models/Baker';
+import auth from './middleware/auth';
 
 //Initialize Express Server
 const recipeApp = express();
@@ -26,7 +27,7 @@ recipeApp.get('/', (req, res) =>
     res.send('http get request sent to root api endpoint')
 );
 
-//Create register API endpoint
+//Create register baker API endpoint
 recipeApp.post(
     '/api/bakers', 
     [
@@ -87,6 +88,16 @@ recipeApp.post(
         }
     }
 );
+
+//Create authorize baker API endpoint
+recipeApp.get('/api/auth', auth, async (req, res) => {
+    try {
+        const baker = await Baker.findById(req.baker.id);
+        res.status(200).json(baker);
+    } catch (error) {
+        res.status(500).send('Unknown server error.');
+    }
+});
 
 //Set up connection listener
 const port = 5000;
