@@ -84,7 +84,7 @@ recipeApp.get('/api/auth', auth, async (req, res) => {
     }
 });
 
-//Create login baker API endpoint
+//Create login API endpoint
 recipeApp.post(
     '/api/login', 
     [
