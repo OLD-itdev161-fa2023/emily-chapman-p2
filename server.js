@@ -195,6 +195,23 @@ recipeApp.get('/api/recipes', auth, async (req, res) => {
     }
 });
 
+//Get Recipe API Endpoint
+recipeApp.get('/api/recipes/:id', auth, async (req, res) => {
+    try {
+        const recipe = await Recipe.findById(req.params.id);
+
+        //Check if the recipe was found
+        if (!recipe) {
+            return res.status(404).json({msg: 'Recipe was not found.'});
+        }
+
+        res.json(recipe);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error.');
+    }
+});
+
 //Set up connection listener
 const port = 5000;
 recipeApp.listen(port, () => console.log(`Express server running on port ${port}`));
