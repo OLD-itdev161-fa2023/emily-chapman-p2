@@ -7,14 +7,14 @@ import Login from './components/Login/Login';
 
 class App extends React.Component {
   state = {
-    data: null,
+    recipes: [],
     token: null,
     baker: null
   };
 
   componentDidMount() {
     this.authenticateBaker();
-  }
+  };
 
   authenticateBaker = () => {
     const token = localStorage.getItem('token');
@@ -29,18 +29,48 @@ class App extends React.Component {
         headers: {
           'x-auth-token': token
         }
-      }
+      };
 
       axios.get('http://localhost:5000/api/auth', config)
         .then((response) => {
           localStorage.setItem('baker', response.data.name);
-          this.setState({baker: response.data.name});
+          this.setState(
+            {
+              baker: response.data.name,
+              token: token
+            },
+            () => {
+              this.loadData();
+            }
+          );
         })
         .catch((error) => {
           localStorage.removeItem('baker');
           this.setState({baker: null});
-          console.erorr(`Error logging in: ${error}.`)
+          console.error(`Error logging in: ${error}.`)
         })
+    }
+  };
+
+  loadData = () => {
+    const {token} = this.state;
+
+    if (token) {
+      const config = {
+        headers: {
+          'x-auth-token': token
+        }
+      };
+
+      axios.get('http://localhost:5000/api/recipes', config)
+        .then(response => {
+          this.setState({
+            recipes: response.data
+          })
+        })
+        .catch(error => {
+          console.error(`Error fetching data: ${error}.`);
+        });
     }
   };
 
@@ -51,7 +81,7 @@ class App extends React.Component {
   };
 
   render() {
-    let {baker, data} = this.state;
+    let {baker, recipes} = this.state;
     const authProps = {
       authenticateBaker: this.authenticateBaker
     }
@@ -79,7 +109,19 @@ class App extends React.Component {
                 {baker ? (
                     <React.Fragment>
                       <h2>Welcome {baker}!</h2>
-                      <p>{data}</p>
+                      <div>
+                        {recipes.map(recipe => (
+                          <div key={recipe._id}>
+                            <h3>{recipe.title}</h3>
+                            <h4><strong>Ingredients:</strong></h4>
+                            <p>{recipe.ingredientList}</p>
+                            <h4><strong>Directions:</strong></h4>
+                            <p>{recipe.directions}</p>
+                            <h4><strong>Notes:</strong></h4>
+                            <p>{recipe.notes}</p>
+                          </div>
+                        ))}
+                      </div>
                     </React.Fragment>
                     ) : (
                     <React.Fragment>
@@ -88,14 +130,20 @@ class App extends React.Component {
                     </React.Fragment>
                   )}
               </Route>
-              <Route exact path="/register" render={() => <Register {...authProps}/>} />
-              <Route exact path="/login" render={() => <Login {...authProps}/>} />
+              <Route 
+                exact path="/register" 
+                render={() => <Register {...authProps} />} 
+              />
+              <Route 
+                exact path="/login" 
+                render={() => <Login {...authProps} />} 
+              />
             </Switch>
           </main>
         </div>
       </Router>
     );
-  }
+  };
 }
 
 export default App;
