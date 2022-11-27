@@ -212,6 +212,30 @@ recipeApp.get('/api/recipes/:id', auth, async (req, res) => {
     }
 });
 
+//Delete Recipe API Endpoint
+recipeApp.delete('/api/recipes/:id', auth, async (req, res) => {
+    try {
+        const recipe = await Recipe.findById(req.params.id);
+
+        //Check if the recipe was found
+        if (!recipe) {
+            return res.status(404).json({msg: 'Recipe was not found.'});
+        }
+
+        //Check if the same baker added the recipe
+        if (recipe.baker.toString() !== req.baker.id) {
+            return res.status(401).json({msg: 'Baker was unable to be authorized.'});
+        }
+
+        await recipe.remove();
+        res.json({msg: 'Recipe was removed.'});
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error.');
+    }
+});
+
 //Set up connection listener
 const port = 5000;
 recipeApp.listen(port, () => console.log(`Express server running on port ${port}`));
