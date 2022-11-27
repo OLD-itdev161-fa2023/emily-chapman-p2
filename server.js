@@ -229,7 +229,38 @@ recipeApp.delete('/api/recipes/:id', auth, async (req, res) => {
 
         await recipe.remove();
         res.json({msg: 'Recipe was removed.'});
-        
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error.');
+    }
+});
+
+//Update Recipe API Endpoint
+recipeApp.put('/api/recipes/:id', auth, async (req, res) => {
+    try {
+        const {title, ingredientList, directions, notes} = req.body;
+        const recipe = await Recipe.findById(req.params.id);
+
+        //Check if the recipe was found
+        if (!recipe) {
+            return res.status(404).json({msg: 'Recipe was not found.'});
+        }
+
+        //Check if the same baker added the recipe
+        if (recipe.baker.toString() !== req.baker.id) {
+            return res.status(401).json({msg: 'Baker was unable to be authorized.'});
+        }
+
+        //Update the recipe and return
+        recipe.title = title || recipe.title;
+        recipe.ingredientList = ingredientList|| recipe.ingredientList;
+        recipe.directions = directions || recipe.directions;
+        recipe.notes = notes || recipe.notes;
+
+        await recipe.save();
+        res.json(recipe);
+    
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error.');
