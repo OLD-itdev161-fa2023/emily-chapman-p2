@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import Baker from './models/Baker';
+import Recipe from './models/Recipe'
 import auth from './middleware/auth';
 
 //Initialize Express Server
@@ -22,12 +23,12 @@ recipeApp.use(
     })
 );
 
-//Create root API endpoint
+//Root API endpoint
 recipeApp.get('/', (req, res) => 
     res.send('http get request sent to root api endpoint')
 );
 
-//Create register baker API endpoint
+//Register baker API endpoint
 recipeApp.post(
     '/api/bakers', 
     [
@@ -74,7 +75,7 @@ recipeApp.post(
     }
 );
 
-//Create authorize baker API endpoint
+//Authorize baker API endpoint
 recipeApp.get('/api/auth', auth, async (req, res) => {
     try {
         const baker = await Baker.findById(req.baker.id);
@@ -84,7 +85,7 @@ recipeApp.get('/api/auth', auth, async (req, res) => {
     }
 });
 
-//Create login API endpoint
+//Login API endpoint
 recipeApp.post(
     '/api/login', 
     [
@@ -140,6 +141,48 @@ const returnToken = (baker, res) => {
         }
     );
 };
+
+//Add Recipe API Endpoint
+recipeApp.post (
+    '/api/recipes',
+    [auth,
+        [
+            check('title', 'A recipe title is required.').not().isEmpty(),
+            check('ingredientList', 'A list of ingredients is required.').not().isEmpty(),
+            check('directions', 'Directions for the recipe are required.').not().isEmpty()
+        ]
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()}); 
+        }
+        else {
+            const {title, ingredientList, directions, notes} = req.body;
+            try {
+                //Find the baker who added the recipe
+                const baker = await Baker.findById(req.baker.id);
+
+                //Add a new recipe
+                const recipe = new Recipe ({
+                    baker: baker.id,
+                    title: title,
+                    ingredientList: ingredientList,
+                    directions: directions,
+                    notes: notes
+                });
+
+                //Save to the database and return
+                await recipe.save();
+
+                res.json(recipe);
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('Server error.');
+            }
+        }
+    }
+);
 
 //Set up connection listener
 const port = 5000;
