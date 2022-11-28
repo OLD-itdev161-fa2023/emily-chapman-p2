@@ -4,10 +4,13 @@ import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import './App.css';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
+import RecipeList from './components/RecipeList/RecipeList';
+import Recipe from './components/Recipe/Recipe';
 
 class App extends React.Component {
   state = {
     recipes: [],
+    recipe: null,
     token: null,
     baker: null
   };
@@ -74,6 +77,13 @@ class App extends React.Component {
     }
   };
 
+  viewRecipe = recipe => {
+    console.log(`View ${recipe.title}`);
+    this.setState({
+      recipe: recipe
+    });
+  };
+
   logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('baker');
@@ -81,7 +91,7 @@ class App extends React.Component {
   };
 
   render() {
-    let {baker, recipes} = this.state;
+    let {baker, recipes, recipe} = this.state;
     const authProps = {
       authenticateBaker: this.authenticateBaker
     }
@@ -109,26 +119,17 @@ class App extends React.Component {
                 {baker ? (
                     <React.Fragment>
                       <h2>Welcome {baker}!</h2>
-                      <div>
-                        {recipes.map(recipe => (
-                          <div key={recipe._id}>
-                            <h3>{recipe.title}</h3>
-                            <h4><strong>Ingredients:</strong></h4>
-                            <p>{recipe.ingredientList}</p>
-                            <h4><strong>Directions:</strong></h4>
-                            <p>{recipe.directions}</p>
-                            <h4><strong>Notes:</strong></h4>
-                            <p>{recipe.notes}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <RecipeList recipes={recipes} clickRecipe={this.viewRecipe} />
                     </React.Fragment>
                     ) : (
                     <React.Fragment>
                       <h2>Welcome!</h2>
-                      <p>Please register or login to save recipes.</p>
+                      <p>Please register or login to save/view your recipes.</p>
                     </React.Fragment>
                   )}
+              </Route>
+              <Route path="/recipes/:recipeId">
+                      <Recipe recipe={recipe} />
               </Route>
               <Route 
                 exact path="/register" 

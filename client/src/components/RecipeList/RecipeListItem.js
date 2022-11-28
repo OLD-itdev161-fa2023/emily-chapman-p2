@@ -17,8 +17,8 @@ const RecipeListItem = props => {
     return (
         <div>
             <div className="recipeListItem" onClick={() => handleClickRecipe(recipe)}>
-                <h2>{recipe.title}</h2>
-                <h3><strong>Ingredients</strong></h3>
+                <h3>{recipe.title}</h3>
+                <h4><strong>Ingredients</strong></h4>
                 <p>{recipe.ingredientList}</p>
             </div>
         </div>
