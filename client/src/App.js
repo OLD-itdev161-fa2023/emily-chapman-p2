@@ -84,6 +84,29 @@ class App extends React.Component {
     });
   };
 
+  deleteRecipe = recipe => {
+    const {token} = this.state;
+
+    if (token) {
+      const config = {
+        headers: {
+          'x-auth-token': token
+        }
+      };
+
+      axios.delete(`http://localhost:5000/api/recipes/${recipe._id}`, config)
+        .then(response => {
+          const newRecipes = this.state.recipes.filter(r => r._id !== recipe._id);
+          this.setState({
+            recipes: [...newRecipes]
+          });
+        })
+        .catch(error => {
+          console.error(`Error deleting recipe: ${error}.`);
+        });
+    }
+  };
+
   logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('baker');
@@ -119,7 +142,7 @@ class App extends React.Component {
                 {baker ? (
                     <React.Fragment>
                       <h2>Welcome {baker}!</h2>
-                      <RecipeList recipes={recipes} clickRecipe={this.viewRecipe} />
+                      <RecipeList recipes={recipes} clickRecipe={this.viewRecipe} deleteRecipe={this.deleteRecipe} />
                     </React.Fragment>
                     ) : (
                     <React.Fragment>

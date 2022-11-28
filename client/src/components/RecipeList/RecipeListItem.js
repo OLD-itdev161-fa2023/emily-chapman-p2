@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import './styles.css';
 
 const RecipeListItem = props => {
-    const {recipe, clickRecipe} = props;
+    const {recipe, clickRecipe, deleteRecipe} = props;
     const history = useHistory();
 
     const handleClickRecipe = recipe => {
@@ -20,6 +20,9 @@ const RecipeListItem = props => {
                 <h3>{recipe.title}</h3>
                 <h4><strong>Ingredients</strong></h4>
                 <p>{recipe.ingredientList}</p>
+            </div>
+            <div className="recipeButtons">
+                <button onClick={() => deleteRecipe(recipe)}>Delete Recipe</button>
             </div>
         </div>
     );
