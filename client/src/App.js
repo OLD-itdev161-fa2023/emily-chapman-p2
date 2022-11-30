@@ -6,6 +6,7 @@ import Register from './components/Register/Register';
 import Login from './components/Login/Login';
 import RecipeList from './components/RecipeList/RecipeList';
 import Recipe from './components/Recipe/Recipe';
+import AddRecipe from './components/Recipe/AddRecipe';
 
 class App extends React.Component {
   state = {
@@ -107,6 +108,14 @@ class App extends React.Component {
     }
   };
 
+  onRecipeAdded = recipe => {
+    const newRecipes = [...this.state.recipes, recipe];
+
+    this.setState({
+      recipes: newRecipes
+    });
+  };
+
   logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('baker');
@@ -125,7 +134,11 @@ class App extends React.Component {
             <h1><Link to="/">SweetTooth</Link></h1>
             <ul>
               <li>
-                <Link to="/register">Register</Link>
+                {baker ? (
+                  <Link to="/add-recipe">Add Recipe</Link>
+                    ) : (
+                  <Link to="/register">Register</Link>
+                )}
               </li>
               <li>
                 {baker ? (
@@ -153,6 +166,11 @@ class App extends React.Component {
               </Route>
               <Route path="/recipes/:recipeId">
                       <Recipe recipe={recipe} />
+              </Route>
+              <Route path="/add-recipe">
+                <AddRecipe
+                  onRecipeAdded={this.onRecipeAdded} 
+                />
               </Route>
               <Route 
                 exact path="/register" 
