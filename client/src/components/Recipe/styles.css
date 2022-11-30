@@ -4,3 +4,7 @@
     max-width: 60%;
     margin: 0 auto;
 }
+
+.form-container textarea {
+    font-family: sans-serif;
+}
