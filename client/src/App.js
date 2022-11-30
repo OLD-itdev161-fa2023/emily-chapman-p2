@@ -7,6 +7,7 @@ import Login from './components/Login/Login';
 import RecipeList from './components/RecipeList/RecipeList';
 import Recipe from './components/Recipe/Recipe';
 import AddRecipe from './components/Recipe/AddRecipe';
+import EditRecipe from './components/Recipe/EditRecipe';
 
 class App extends React.Component {
   state = {
@@ -108,12 +109,30 @@ class App extends React.Component {
     }
   };
 
+  editRecipe = recipe => {
+    this.setState({
+      recipe: recipe
+    });
+  };
+
   onRecipeAdded = recipe => {
     const newRecipes = [...this.state.recipes, recipe];
 
     this.setState({
       recipes: newRecipes
     });
+  };
+
+  onRecipeUpdated = recipe => {
+    console.log('Updated recipe: ', recipe);
+    const newRecipes = [...this.state.recipes];
+    const index = newRecipes.findIndex(r => r._id === recipe._id);
+
+    newRecipes[index] = recipe;
+
+    this.setState({
+      recipes: newRecipes
+    })
   };
 
   logout = () => {
@@ -123,7 +142,7 @@ class App extends React.Component {
   };
 
   render() {
-    let {baker, recipes, recipe} = this.state;
+    let {baker, recipes, recipe, token} = this.state;
     const authProps = {
       authenticateBaker: this.authenticateBaker
     }
@@ -155,7 +174,12 @@ class App extends React.Component {
                 {baker ? (
                     <React.Fragment>
                       <h2>Welcome {baker}!</h2>
-                      <RecipeList recipes={recipes} clickRecipe={this.viewRecipe} deleteRecipe={this.deleteRecipe} />
+                      <RecipeList 
+                        recipes={recipes} 
+                        clickRecipe={this.viewRecipe} 
+                        deleteRecipe={this.deleteRecipe} 
+                        editRecipe={this.editRecipe}
+                      />
                     </React.Fragment>
                     ) : (
                     <React.Fragment>
@@ -169,8 +193,16 @@ class App extends React.Component {
               </Route>
               <Route path="/add-recipe">
                 <AddRecipe
+                  token={token}
                   onRecipeAdded={this.onRecipeAdded} 
                 />
+              </Route>
+              <Route path="/edit-recipe/:recipeId">
+                  <EditRecipe
+                    token={token}
+                    recipe={recipe}
+                    onRecipeUpdated={this.onRecipeUpdated}
+                  />
               </Route>
               <Route 
                 exact path="/register" 

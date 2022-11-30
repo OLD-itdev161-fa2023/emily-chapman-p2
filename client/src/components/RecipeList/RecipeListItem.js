@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import './styles.css';
 
 const RecipeListItem = props => {
-    const {recipe, clickRecipe, deleteRecipe} = props;
+    const {recipe, clickRecipe, deleteRecipe, editRecipe} = props;
     const history = useHistory();
 
     const handleClickRecipe = recipe => {
@@ -12,6 +12,11 @@ const RecipeListItem = props => {
 
         clickRecipe(recipe);
         history.push(`/recipes/${slug}`);
+    };
+
+    const handleEditRecipe = recipe => {
+        editRecipe(recipe);
+        history.push(`/edit-recipe/${recipe._id}`)
     };
 
     return (
@@ -23,6 +28,7 @@ const RecipeListItem = props => {
             </div>
             <div className="recipeButtons">
                 <button onClick={() => deleteRecipe(recipe)}>Delete Recipe</button>
+                <button onClick={() => handleEditRecipe(recipe)}>Edit Recipe</button>
             </div>
         </div>
     );

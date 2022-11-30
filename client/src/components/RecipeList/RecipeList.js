@@ -2,7 +2,7 @@ import React from 'react';
 import RecipeListItem from './RecipeListItem';
 
 const RecipeList = props => {
-    const {recipes, clickRecipe, deleteRecipe} = props;
+    const {recipes, clickRecipe, deleteRecipe, editRecipe} = props;
     
     return recipes.map(recipe => (
         <RecipeListItem
@@ -10,6 +10,7 @@ const RecipeList = props => {
             recipe={recipe}
             clickRecipe={clickRecipe}
             deleteRecipe={deleteRecipe}
+            editRecipe={editRecipe}
         />
     ));
 };

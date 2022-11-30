@@ -3,7 +3,7 @@ import axios from 'axios';
 import {useHistory} from 'react-router-dom';
 import './styles.css';
 
-const EditRecipe = ({token, onRecipeUpdated}) => {
+const EditRecipe = ({token, recipe, onRecipeUpdated}) => {
     let history = useHistory();
     const [recipeData, setRecipeData] = useState({
         title: recipe.title,
@@ -91,7 +91,7 @@ const EditRecipe = ({token, onRecipeUpdated}) => {
                 rows="20"
                 onChange={e => onChange(e)}
             ></textarea>
-            <button onClick={() => add()}>Submit</button>
+            <button onClick={() => update()}>Submit</button>
         </div>
     );
 };
