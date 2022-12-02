@@ -1,10 +1,11 @@
 import React from 'react';
+import './styles.css';
 
 const Recipe = props => {
     const {recipe} = props;
 
     return (
-        <div>
+        <div className="recipe">
             <h2>{recipe.title}</h2>
             <h3><strong>Ingredients</strong></h3>
             <p>{recipe.ingredientList}</p>

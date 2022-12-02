@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {useHistory} from 'react-router-dom';
+import './styles.css';
 
 const Register = ({authenticateBaker}) => {
     let history = useHistory();
@@ -66,58 +67,60 @@ const Register = ({authenticateBaker}) => {
 
     return (
         <div>
-            <h2>Register</h2>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Name"
-                    name="name"
-                    value={name}
-                    onChange={e => onChange(e)}
-                />
-            </div>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Email"
-                    name="email"
-                    value={email}
-                    onChange={e => onChange(e)}
-                />
-            </div>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Password"
-                    name="password"
-                    value={password}
-                    onChange={e => onChange(e)}
-                />
-            </div>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Confirm Password"
-                    name="passwordConfirm"
-                    value={passwordConfirm}
-                    onChange={e => onChange(e)}
-                />
-            </div>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Favorite Dessert"
-                    name="favoriteDessert"
-                    value={favoriteDessert}
-                    onChange={e => onChange(e)}
-                />
-            </div>
-            <div>
-                <button onClick={() => registerBaker()}>Register</button>
-            </div>
-            <div>
-                {errors && errors.map(error => 
-                    <div key={error.msg}>{error.msg}</div>)}
+            <h2>Create an Account</h2>
+            <div className="form-container">
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        name="name"
+                        value={name}
+                        onChange={e => onChange(e)}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Email"
+                        name="email"
+                        value={email}
+                        onChange={e => onChange(e)}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Password"
+                        name="password"
+                        value={password}
+                        onChange={e => onChange(e)}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Confirm Password"
+                        name="passwordConfirm"
+                        value={passwordConfirm}
+                        onChange={e => onChange(e)}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Favorite Dessert"
+                        name="favoriteDessert"
+                        value={favoriteDessert}
+                        onChange={e => onChange(e)}
+                    />
+                </div>
+                <div>
+                    <button onClick={() => registerBaker()}>Register</button>
+                </div>
+                <div className="error_message">
+                    {errors && errors.map(error => 
+                        <div key={error.msg}>{error.msg}</div>)}
+                </div>
             </div>
         </div>
     )

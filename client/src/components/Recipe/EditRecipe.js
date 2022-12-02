@@ -71,24 +71,18 @@ const EditRecipe = ({token, recipe, onRecipeUpdated}) => {
                 name="ingredientList"
                 placeholder="Ingredient List"
                 value={ingredientList}
-                cols="40"
-                rows="20"
                 onChange={e => onChange(e)}
             ></textarea>
             <textarea
                 name="directions"
                 placeholder="Directions"
                 value={directions}
-                cols="40"
-                rows="20"
                 onChange={e => onChange(e)}
             ></textarea>
             <textarea
                 name="notes"
                 placeholder="Notes"
                 value={notes}
-                cols="40"
-                rows="20"
                 onChange={e => onChange(e)}
             ></textarea>
             <button onClick={() => update()}>Submit</button>

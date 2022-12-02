@@ -58,40 +58,36 @@ const AddRecipe = ({token, onRecipeAdded}) => {
     };
 
     return (
-        <div className="form-container">
-            <h2>Add a Recipe</h2>
-            <input
-                name="title"
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={e => onChange(e)}
-            />
-            <textarea
-                name="ingredientList"
-                placeholder="Ingredient List"
-                value={ingredientList}
-                cols="40"
-                rows="20"
-                onChange={e => onChange(e)}
-            ></textarea>
-            <textarea
-                name="directions"
-                placeholder="Directions"
-                value={directions}
-                cols="40"
-                rows="20"
-                onChange={e => onChange(e)}
-            ></textarea>
-            <textarea
-                name="notes"
-                placeholder="Notes"
-                value={notes}
-                cols="40"
-                rows="20"
-                onChange={e => onChange(e)}
-            ></textarea>
-            <button onClick={() => add()}>Submit</button>
+        <div>
+        <h2>Add a Recipe</h2>
+            <div className="form-container">
+                <input
+                    name="title"
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={e => onChange(e)}
+                />
+                <textarea
+                    name="ingredientList"
+                    placeholder="Ingredient List"
+                    value={ingredientList}
+                    onChange={e => onChange(e)}
+                ></textarea>
+                <textarea
+                    name="directions"
+                    placeholder="Directions"
+                    value={directions}
+                    onChange={e => onChange(e)}
+                ></textarea>
+                <textarea
+                    name="notes"
+                    placeholder="Notes"
+                    value={notes}
+                    onChange={e => onChange(e)}
+                ></textarea>
+                <button onClick={() => add()}>Submit</button>
+            </div>
         </div>
     );
 };

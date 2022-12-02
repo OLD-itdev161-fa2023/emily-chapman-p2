@@ -1,0 +1,32 @@
+.form-container div {
+    margin: 0 auto;
+}
+
+.form-container div input {
+    margin-bottom: 1.3em;
+    padding: 1.25em 1em;
+    font-size: 1em;
+    border: 1.5px solid #1e182b;
+    width: 360px;
+}
+
+.form-container div button {
+    width: 160px;
+    padding: 1.3em 1.6em;
+    margin: 0.5em 0;
+    background-color: #8f5b96;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.2em;
+    border-radius: 0.15em;
+    cursor: pointer;
+}
+
+.form-container .error_message {
+    margin: 1em 0 4em 0;
+    color: #ba415f;
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+}

@@ -75,16 +75,6 @@ recipeApp.post(
     }
 );
 
-//Authorize baker API endpoint
-recipeApp.get('/api/auth', auth, async (req, res) => {
-    try {
-        const baker = await Baker.findById(req.baker.id);
-        res.status(200).json(baker);
-    } catch (error) {
-        res.status(500).send('Unknown server error.');
-    }
-});
-
 //Login API endpoint
 recipeApp.post(
     '/api/login', 
@@ -141,6 +131,16 @@ const returnToken = (baker, res) => {
         }
     );
 };
+
+//Authorize baker API endpoint
+recipeApp.get('/api/auth', auth, async (req, res) => {
+    try {
+        const baker = await Baker.findById(req.baker.id);
+        res.status(200).json(baker);
+    } catch (error) {
+        res.status(500).send('Unknown server error.');
+    }
+});
 
 //Add Recipe API Endpoint
 recipeApp.post (

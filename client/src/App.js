@@ -183,8 +183,10 @@ class App extends React.Component {
                     </React.Fragment>
                     ) : (
                     <React.Fragment>
-                      <h2>Welcome!</h2>
-                      <p>Please register or login to save/view your recipes.</p>
+                      <div className="home">
+                        <h2>Welcome Baker!</h2>
+                        <p>Please register or login to save/view your recipes.</p>
+                      </div>
                     </React.Fragment>
                   )}
               </Route>

@@ -20,7 +20,7 @@ const RecipeListItem = props => {
     };
 
     return (
-        <div>
+        <div className="recipes">
             <div className="recipeListItem" onClick={() => handleClickRecipe(recipe)}>
                 <h3>{recipe.title}</h3>
                 <h4><strong>Ingredients</strong></h4>
